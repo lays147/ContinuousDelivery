@@ -13,6 +13,16 @@
       MYSQL_PASSWORD: password
       TEST_OUTPUT_DIR: /reports
 
+  builder:
+    build: ../../
+    dockerfile: docker/dev/Dockerfile
+    volumes:
+      - ../../target:/wheelhouse
+    volumes_from:
+      - cache
+    entrypoint: "entrypoint.sh"
+    command: ["pip", "wheel", "--no-index", "-f /build", "."]
+
   agent:
     image: lays147/ansible
     volumes:
@@ -36,4 +46,5 @@
     dockerfile: docker/dev/Dockerfile
     volumes:
       - /tmp/cache:/cache
+      - /build
     entrypoint: "true"
